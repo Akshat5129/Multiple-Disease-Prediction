@@ -1,0 +1,23 @@
+<style>
+    .alert-success {
+  text-decoration-line: underline;
+  text-decoration-color: green;
+}
+</style>
+<div class="row"  style="margin-bottom: 277px;">
+        <div class="col-md-3"></div>
+        <h1 class="display-5">Multiple Disease Prediction</h1>
+        <div class="container4">
+            {% if pred == 1 %}
+            <div class="card card-body alert alert-danger"><center><h1>This cell is an Infected Malarial Cell.</h1></center></div>
+            {% else %}
+                <div class="card card-body alert alert-success"><center><h1> cell is not Infected.</h1></center></div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4"><a href="{{ url_for('index') }}" class="btn btn-block btn-primary">Back to Home</a></div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
