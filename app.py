@@ -16,8 +16,8 @@ from wtforms.validators import InputRequired, Email, Length
 
 filename = 'diabetes-prediction-rfc-model.pkl'
 classifier = pickle.load(open(filename, 'rb'))
-model = pickle.load(open('model.pkl', 'rb'))
-model1 = pickle.load(open('model1.pkl', 'rb'))
+model = pickle.load(open('./models/model.pkl', 'rb'))
+model1 = pickle.load(open('./models/model1.pkl', 'rb'))
 model = load_model('./models/malaria.h5')
 model = load_model('./models/pneumonia.h5')
 
@@ -103,7 +103,7 @@ def pneumonia():
 def ValuePredictor(to_predict_list, size):
     to_predict = np.array(to_predict_list).reshape(1, size)
     if size == 7:
-        loaded_model = joblib.load('kidney_model.pkl')
+        loaded_model = joblib.load('./models/kidney_model.pkl')
         result = loaded_model.predict(to_predict)
     return result[0]
 
@@ -131,7 +131,7 @@ def liver():
 def ValuePred(to_predict_list, size):
     to_predict = np.array(to_predict_list).reshape(1, size)
     if (size == 7):
-        loaded_model = joblib.load('liver_model.pkl')
+        loaded_model = joblib.load('./models/liver_model.pkl')
         result = loaded_model.predict(to_predict)
     return result[0]
 
@@ -200,7 +200,7 @@ classifier = RandomForestClassifier(n_estimators=20)
 classifier.fit(X_train, y_train)
 
 # Creating a pickle file for the classifier
-filename = 'diabetes-prediction-rfc-model.pkl'
+filename = './models/diabetes-prediction-rfc-model.pkl'
 pickle.dump(classifier, open(filename, 'wb'))
 
 
