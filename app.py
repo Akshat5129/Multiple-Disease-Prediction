@@ -14,7 +14,7 @@ from tensorflow.keras.models import load_model
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
 
-filename = 'diabetes-prediction-rfc-model.pkl'
+filename = './models/diabetes-prediction-rfc-model.pkl'
 classifier = pickle.load(open(filename, 'rb'))
 model = pickle.load(open('./models/model.pkl', 'rb'))
 model1 = pickle.load(open('./models/model1.pkl', 'rb'))
