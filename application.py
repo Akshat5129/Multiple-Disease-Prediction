@@ -5,97 +5,65 @@ import pandas as pd
 from PIL import Image
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager, UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import load_model
-from wtforms import StringField, PasswordField, BooleanField
-from wtforms.validators import InputRequired, Email, Length
 
 filename = './models/diabetes-prediction-rfc-model.pkl'
 classifier = pickle.load(open(filename, 'rb'))
 model = pickle.load(open('./models/model.pkl', 'rb'))
 model1 = pickle.load(open('./models/model1.pkl', 'rb'))
-model = load_model('./models/malaria.h5')
-model = load_model('./models/pneumonia.h5')
+model2 = load_model('./models/malaria.h5')
+model3 = load_model('./models/pneumonia.h5')
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-bootstrap = Bootstrap(app)
-db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+application = Flask(__name__)
+application.config['SECRET_KEY'] = 'secret'
+application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+bootstrap = Bootstrap(application)
 
 
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(15), unique=True)
-    email = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(80))
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
-    remember = BooleanField('remember me')
-
-
-class RegisterForm(FlaskForm):
-    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
-    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
-
-
-@app.route('/')
+@application.route('/')
 def index():
     return render_template("index.html")
 
 
-@app.route("/index")
+@application.route("/index")
 def dashboard():
     return render_template("index.html")
 
 
-@app.route("/disindex")
+@application.route("/disindex")
 def disindex():
     return render_template("disindex.html")
 
 
-@app.route("/cancer")
+@application.route("/cancer")
 def cancer():
     return render_template("cancer.html")
 
 
-@app.route("/diabetes")
+@application.route("/diabetes")
 def diabetes():
     return render_template("diabetes.html")
 
 
-@app.route("/heart")
+@application.route("/heart")
 def heart():
     return render_template("heart.html")
 
 
-@app.route("/kidney")
+@application.route("/kidney")
 def kidney():
     return render_template("kidney.html")
 
 
-@app.route("/malaria")
+@application.route("/malaria")
 def malaria():
     return render_template("malaria.html")
 
 
-@app.route("/pneumonia")
+@application.route("/pneumonia")
 def pneumonia():
     return render_template("pneumonia.html")
 
@@ -108,7 +76,7 @@ def ValuePredictor(to_predict_list, size):
     return result[0]
 
 
-@app.route("/predictkidney", methods=['GET', 'POST'])
+@application.route("/predictkidney", methods=['GET', 'POST'])
 def predictkidney():
     if request.method == "POST":
         to_predict_list = request.form.to_dict()
@@ -123,7 +91,7 @@ def predictkidney():
     return render_template("kidney_result.html", prediction_text=prediction)
 
 
-@app.route("/liver")
+@application.route("/liver")
 def liver():
     return render_template("liver.html")
 
@@ -136,7 +104,7 @@ def ValuePred(to_predict_list, size):
     return result[0]
 
 
-@app.route('/predictliver', methods=["POST"])
+@application.route('/predictliver', methods=["POST"])
 def predictliver():
     if request.method == "POST":
         to_predict_list = request.form.to_dict()
@@ -152,7 +120,7 @@ def predictliver():
     return render_template("liver_result.html", prediction_text=prediction)
 
 
-@app.route('/predict', methods=['POST'])
+@application.route('/predict', methods=['POST'])
 def predict():
     input_features = [int(x) for x in request.form.values()]
     features_value = [np.array(input_features)]
@@ -207,7 +175,7 @@ pickle.dump(classifier, open(filename, 'wb'))
 #####################################################################
 
 
-@app.route('/predictt', methods=['POST'])
+@application.route('/predictt', methods=['POST'])
 def predictt():
     if request.method == 'POST':
         preg = request.form['pregnancies']
@@ -227,7 +195,7 @@ def predictt():
 
 ############################################################################################################
 
-@app.route('/predictheart', methods=['POST'])
+@application.route('/predictheart', methods=['POST'])
 def predictheart():
     input_features = [float(x) for x in request.form.values()]
     features_value = [np.array(input_features)]
@@ -252,7 +220,7 @@ def predictheart():
 ############################################################################################################
 
 
-@app.route("/malariapredict", methods=['POST'])
+@application.route("/malariapredict", methods=['POST'])
 def malariapredictPage():
     if request.method == 'POST':
         try:
@@ -270,7 +238,7 @@ def malariapredictPage():
     return render_template('malaria_predict.html', pred=pred)
 
 
-@app.route("/pneumoniapredict", methods=['POST'])
+@application.route("/pneumoniapredict", methods=['POST'])
 def pneumoniapredictPage():
     if request.method == 'POST':
         try:
@@ -289,4 +257,4 @@ def pneumoniapredictPage():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    application.run(debug=True)
